@@ -25,3 +25,12 @@ def get_all_statistic() -> list:
     result = cursor.fetchall()
     response = added_late_statistic(result)
     return response
+
+
+def get_yesterday_statistic() -> list:
+    """ Вывод всех сотрудников, за вчерашний день"""
+    cursor = db.conn.cursor()
+    cursor.execute("select * from statistics where indate = current_date - INTERVAL '1 day'")
+    result = cursor.fetchall()
+    response = added_late_statistic(result)
+    return response
