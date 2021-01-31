@@ -16,3 +16,12 @@ def added_late_statistic(result) -> list:
             response[count][5] = 'Еще не пришел'
         count += 1
     return response
+
+
+def get_all_statistic() -> list:
+    """ Вывод всех сотрудников """
+    cursor = db.conn.cursor()
+    cursor.execute("select * from statistics")
+    result = cursor.fetchall()
+    response = added_late_statistic(result)
+    return response
