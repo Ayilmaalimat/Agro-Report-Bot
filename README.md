@@ -5,7 +5,7 @@ Agro-Report-Bot
 _________________________________________________________________________________________
 
 
-![First Commit](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwriteabout.tech%2Fprogramming%2Fcreating-a-telegram-bot-on-python%2F&psig=AOvVaw241ujZAzwP4dagbtXZFJPP&ust=1612194212801000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDMuc7Bxu4CFQAAAAAdAAAAABAD "First Commit")
+![First Commit](https://writeabout.tech/wp-content/uploads/2019/08/telegram-bot-2.png "SF Bot")
 
 _________________________________________________________________________________________
 
