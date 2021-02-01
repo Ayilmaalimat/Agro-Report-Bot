@@ -141,4 +141,6 @@ cython_debug/
 
 # local folder and
 xlsx-files/
+.idea/
+.idea
 

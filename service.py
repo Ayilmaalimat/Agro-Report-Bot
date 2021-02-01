@@ -2,6 +2,15 @@ import db
 import datetime
 
 
+def checked_user_in_list(user_id, message) -> bool:
+    is_checked = False
+    for user in user_id:
+        if user == message.from_user.id:
+            is_checked = True
+            break
+    return is_checked
+
+
 def added_late_statistic(result) -> list:
     """  """
     time = datetime.time(9, 30)

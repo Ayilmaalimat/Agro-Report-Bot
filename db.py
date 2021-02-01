@@ -10,7 +10,6 @@ DB_PASSWORD = config('DB_PASSWORD')
 try:
     conn = psycopg2.connect(
         "dbname={} user={} host={} password={} port={}".format(DB_NAME, DB_USER, DB_HOST, DB_PASSWORD, DB_PORT))
-    print(conn)
     print("connected to the database")
 except:
     print("unable to connect to the database")
