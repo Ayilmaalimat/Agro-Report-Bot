@@ -64,19 +64,9 @@ async def send_help(message: types.Message):
     await message.answer(
         'Какие команды есть?\n'
         '1. Отчет за сегодняшний день - /today_report\n'
-        '2. Отчет за вчерашний день   - /yesterday_report\n'
-        '3. Отчет за весь период      - /all_report'
+        '2. Отчет за вчерашний день   - /yesterday_report'
     )
 
-
-@dp.message_handler(commands=['all_report'])
-@auth
-async def get_all_statistic(message: types.Message):
-    """ Отправка отчета за весь период времени"""
-    stat = service.get_all_statistic()
-    writeXlsx.write_in_xlsx('_all', stat)
-    doc = open('./xlsx-files/statistics_all.xlsx', 'rb')
-    await bot.send_document(message.chat.id, doc)
 
 
 @dp.message_handler(commands=['yesterday_report'])

@@ -143,4 +143,6 @@ cython_debug/
 xlsx-files/
 .idea/
 .idea
+.Dockerfile
+
 
