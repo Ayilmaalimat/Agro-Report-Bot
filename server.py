@@ -24,7 +24,7 @@ def auth(func):
         if not is_present:
             stick = open('./stickers/index.webp', 'rb')
             await bot.send_sticker(message.chat.id, stick)
-            return await message.reply('Ого-го-го! 😱 У вас нету доступа!', reply=False)
+            return await message.reply('Ого-го-го! 😱 У вас нет доступа!', reply=False)
         return await func(message)
 
     return wrapper
@@ -35,11 +35,11 @@ async def send_welcome(message: types.Message):
     is_checked = service.checked_user_in_list(USER_LIST_ID, message)
     if is_checked:
         mess = 'Снова здравствуйте!\n' \
-               'Мы вас не забыли, мистер <b>{} {}</b> 😉\n' \
+               'Мы вас не забыли, <b>{} {}</b> 😉\n' \
                'Какой отчет хотели посмотреть?\n' \
                'Если что команды здесь -> /help'.format(message.from_user.first_name, message.from_user.last_name)
     else:
-        mess = 'Добро пожаловать, мистер <b>{} {}!</b>\n' \
+        mess = 'Добро пожаловать, <b>{} {}!</b>\n' \
                'Я - <b>SF</b> бот, созданный для формирования отчета\n' \
                'Стойте! Чтобы получить доступ ко всем функциям, сначала введите пароль, а то не пущу 😠'.format(
             message.from_user.first_name, message.from_user.last_name)
@@ -53,8 +53,8 @@ async def send_password_text(message: types.Message):
     stick = open('./stickers/index3.webp', 'rb')
     await bot.send_sticker(message.chat.id, stick)
     return await message.reply(
-        'Хорошая работа Сэр! ✊\n'
-        'Мы вас запомняли, теперь можете посмотреть в чем я силен -> /help', reply=False)
+        'Хорошая работа, {} {}! ✊\n'
+        'Мы вас запомнили, теперь можете посмотреть в чем я силен -> /help'. format(message.from_user.first_name, message.from_user.last_name), reply=False)
 
 
 @dp.message_handler(commands=['help'])

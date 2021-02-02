@@ -1,0 +1,22 @@
+version: '1'
+
+services:
+
+  db:
+    container_name: database
+    image: mysql
+    restart: always
+    env_file:
+      - ".env"
+
+  tgbot:
+    container_name: bot
+    build: .
+    volumes:
+      - .:/bot-app
+    command: python server.py
+    restart: always
+    network_mode: "host"
+
+    env_file:
+      - ".env"
