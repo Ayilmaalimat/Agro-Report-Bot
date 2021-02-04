@@ -1,18 +1,7 @@
-from aiogram import Bot, Dispatcher, executor, types
+from app.config import USER_PASSWORD, USER_LIST_ID, types, bot, dp
+from app.callback import keyboard
+from app import writeXlsx, service
 import datetime
-from decouple import config
-import logging
-import writeXlsx
-import service
-
-API_TOKEN = config('API_TOKEN')
-USER_PASSWORD = config('USER_PASSWORD')
-USER_LIST_ID = []
-
-logging.basicConfig(level=logging.INFO)
-
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
 
 
 def auth(func):
@@ -32,44 +21,49 @@ def auth(func):
 
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
+    markup = keyboard.gen_markup_help()
     is_checked = service.checked_user_in_list(USER_LIST_ID, message)
     if is_checked:
         mess = 'Снова здравствуйте!\n' \
                'Мы вас не забыли, <b>{} {}</b> 😉\n' \
-               'Какой отчет хотели посмотреть?\n' \
-               'Если что команды здесь -> /help'.format(message.from_user.first_name, message.from_user.last_name)
+               'Какой отчет хотели посмотреть?\n'.format(message.from_user.first_name, message.from_user.last_name)
+        await bot.send_message(message.chat.id, mess, parse_mode='HTML', reply_markup=markup)
     else:
         mess = 'Добро пожаловать, <b>{} {}!</b>\n' \
                'Я - <b>SF</b> бот, созданный для формирования отчета\n' \
                'Стойте! Чтобы получить доступ ко всем функциям, сначала введите пароль, а то не пущу 😠'.format(
             message.from_user.first_name, message.from_user.last_name)
-    await bot.send_message(message.chat.id, mess, parse_mode='HTML')
+        await bot.send_message(message.chat.id, mess, parse_mode='HTML')
 
 
 @dp.message_handler(lambda message: message.text == USER_PASSWORD)
 async def send_password_text(message: types.Message):
     """ Проверка пароля пользователя """
     USER_LIST_ID.append(message.chat.id)
+    markup = keyboard.gen_markup_help()
     stick = open('./stickers/index3.webp', 'rb')
     await bot.send_sticker(message.chat.id, stick)
     return await message.reply(
         'Хорошая работа, {} {}! ✊\n'
-        'Мы вас запомнили, теперь можете посмотреть в чем я силен -> /help'. format(message.from_user.first_name, message.from_user.last_name), reply=False)
+        'Мы вас запомнили, теперь можете посмотреть в чем я силен'.format(message.from_user.first_name,
+                                                                                   message.from_user.last_name),
+        reply_markup=markup,
+        reply=False)
 
 
-@dp.message_handler(commands=['help'])
+@dp.message_handler(lambda message: message.text == 'Команды')
 @auth
 async def send_help(message: types.Message):
     """ Справочник для пользователя """
-    await message.answer(
-        'Какие команды есть?\n'
-        '1. Отчет за сегодняшний день - /today_report\n'
-        '2. Отчет за вчерашний день   - /yesterday_report'
+    markup = keyboard.gen_markup_commands()
+    await bot.send_message(
+        message.chat.id,
+        'Какие команды есть?\n',
+        reply_markup=markup
     )
 
 
-
-@dp.message_handler(commands=['yesterday_report'])
+@dp.message_handler(lambda message: message.text == '2. Отчет за вчерашний день')
 @auth
 async def get_yesterday_statistic(message: types.Message):
     """ Отправка отчета за вчеращний день"""
@@ -80,7 +74,7 @@ async def get_yesterday_statistic(message: types.Message):
     await bot.send_document(message.chat.id, doc)
 
 
-@dp.message_handler(commands=['today_report'])
+@dp.message_handler(lambda message: message.text == '1. Отчет за сегодняшний день')
 @auth
 async def get_today_statistic(message: types.Message):
     """ Отправка отчета за сегоднящний день"""
@@ -89,7 +83,3 @@ async def get_today_statistic(message: types.Message):
     writeXlsx.write_in_xlsx(date, stat)
     doc = open('./xlsx-files/statistics' + str(date) + '.xlsx', 'rb')
     await bot.send_document(message.chat.id, doc)
-
-
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)

@@ -1,5 +1,5 @@
-import datetime 
-import connection
+import datetime
+from database import connection
 
 
 def checked_user_in_list(user_id, message) -> bool:
@@ -28,13 +28,13 @@ def added_late_statistic(result) -> list:
     return response
 
 
-
 def get_yesterday_statistic() -> list:
     """ Вывод всех сотрудников, за вчерашний день"""
     dp = connection.create_pool()
     cursor = dp.cursor()
     table_name = checked_date(True)
-    cursor.execute("SELECT ATTENDANCE_DATE, SWIPE_NAME, DEPT_NAME, SIGNIN_TIME, SIGNOUT_TIME FROM " + table_name + " join dss.adm_card_department on " + table_name + ".DEPT_CODE = dss.adm_card_department.DEPT_CODE WHERE ATTENDANCE_DATE = CURRENT_DATE() - INTERVAL 1 DAY and dss.adm_card_department.DEPT_CODE like '001001%'")
+    cursor.execute(
+        "SELECT ATTENDANCE_DATE, SWIPE_NAME, DEPT_NAME, SIGNIN_TIME, SIGNOUT_TIME FROM " + table_name + " join dss.adm_card_department on " + table_name + ".DEPT_CODE = dss.adm_card_department.DEPT_CODE WHERE ATTENDANCE_DATE = CURRENT_DATE() - INTERVAL 1 DAY and dss.adm_card_department.DEPT_CODE like '001001%'")
     result = cursor.fetchall()
     response = added_late_statistic(result)
     return response
@@ -45,7 +45,8 @@ def get_today_statistic() -> list:
     dp = connection.create_pool()
     cursor = dp.cursor()
     table_name = checked_date(False)
-    cursor.execute("SELECT ATTENDANCE_DATE, SWIPE_NAME, DEPT_NAME, SIGNIN_TIME, SIGNOUT_TIME FROM " + table_name + " join dss.adm_card_department on " + table_name +".DEPT_CODE = dss.adm_card_department.DEPT_CODE WHERE ATTENDANCE_DATE = CURRENT_DATE() and dss.adm_card_department.DEPT_CODE like '001001%'")
+    cursor.execute(
+        "SELECT ATTENDANCE_DATE, SWIPE_NAME, DEPT_NAME, SIGNIN_TIME, SIGNOUT_TIME FROM " + table_name + " join dss.adm_card_department on " + table_name + ".DEPT_CODE = dss.adm_card_department.DEPT_CODE WHERE ATTENDANCE_DATE = CURRENT_DATE() and dss.adm_card_department.DEPT_CODE like '001001%'")
     result = cursor.fetchall()
     response = added_late_statistic(result)
     return response
@@ -63,4 +64,4 @@ def checked_date(isPresent) -> str:
         response = table_name + format_yesterday_month
         return response
     response = table_name + format_today_month
-    return response 
+    return response
