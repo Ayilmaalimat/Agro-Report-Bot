@@ -1,4 +1,4 @@
-version: '2.2'
+version: '3.2'
 
 services:
 
@@ -14,7 +14,7 @@ services:
     build: .
     volumes:
       - .:/bot-app
-    command: python server.py
+    command: python run.py
     restart: always
     network_mode: "host"
 
